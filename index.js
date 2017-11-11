@@ -52,6 +52,18 @@ app.get('/rewind', function (req, res) {
   res.json({ "message": "seek to the beginning" });
 });
 
+app.get('/seek', function (req, res) {
+  if (!req.query || !req.query.position) {
+    return res.json({ "error": "no position parameter provided" });
+  }
+  var position = parseInt(req.query.position);
+  if (isNaN(position) || position < 0 || position > player.duration) {
+    return res.json({ "error": "specified position out of range" });
+  }
+  player.seekTo(position);
+  res.json({ "message": "seek to " + position + "ms" });
+});
+
 app.get('/', function (req, res) {
   res.render('index', tokens);
 });
